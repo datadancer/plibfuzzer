@@ -74,6 +74,7 @@ public:
   void CrashResistantMergeInternalStep(const std::string &ControlFilePath);
   MutationDispatcher &GetMD() { return MD; }
   void PrintFinalStats();
+  void PrintSha1Stats();
   void SetMaxInputLen(size_t MaxInputLen);
   void SetMaxMutationLen(size_t MaxMutationLen);
   void RssLimitCallback();
@@ -106,11 +107,13 @@ private:
   static void StaticDeathCallback();
   void DumpCurrentUnit(const char *Prefix);
   void DeathCallback();
+  void OutputTestCases();
 
   void AllocateCurrentUnitData();
   uint8_t *CurrentUnitData = nullptr;
   std::atomic<size_t> CurrentUnitSize;
   uint8_t BaseSha1[kSHA1NumBytes];  // Checksum of the base unit.
+  Vector<std::string> Sha1Vector;
 
   bool GracefulExitRequested = false;
 

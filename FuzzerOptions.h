@@ -15,6 +15,8 @@
 namespace fuzzer {
 
 struct FuzzingOptions {
+  int id = 0;
+  int BaseRuns = 10000;
   int Verbosity = 1;
   size_t MaxLen = 0;
   size_t LenControl = 1000;

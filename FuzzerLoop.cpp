@@ -9,6 +9,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "FuzzerCorpus.h"
+#include "FuzzerSHA1.h"
 #include "FuzzerIO.h"
 #include "FuzzerInternal.h"
 #include "FuzzerMutate.h"
@@ -352,11 +353,18 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
   Printf("%s", End);
 }
 
+void Fuzzer::PrintSha1Stats() {
+  Printf("Number of all executed units: %zd\n", Sha1Vector.size());
+  for(auto sha1:Sha1Vector) Printf("%s\n", sha1.c_str());
+  Printf("End of all executed units: %zd\n", Sha1Vector.size());
+}
+
 void Fuzzer::PrintFinalStats() {
   if (Options.PrintCoverage)
     TPC.PrintCoverage();
   if (Options.PrintCorpusStats)
     Corpus.PrintStats();
+  OutputTestCases();
   if (!Options.PrintFinalStats)
     return;
   size_t ExecPerSec = execPerSec();
@@ -467,6 +475,11 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
   if (!Size)
     return false;
 
+  // Record this unit:CurrentUnitData.
+  Sha1Hash TmpSha1;
+  ComputeSHA1(CurrentUnitData, Size, TmpSha1);
+  Sha1Vector.push_back(Sha1ToString(TmpSha1));
+
   ExecuteCallback(Data, Size);
 
   UniqFeatureSetTmp.clear();
@@ -535,6 +548,7 @@ static bool LooseMemeq(const uint8_t *A, const uint8_t *B, size_t Size) {
 void Fuzzer::ExecuteCallback(const uint8_t *Data, size_t Size) {
   TPC.RecordInitialStack();
   TotalNumberOfRuns++;
+  if(TotalNumberOfRuns % Options.BaseRuns == 0) OutputTestCases();
   assert(InFuzzingThread());
   // We copy the contents of Unit into a separate heap buffer
   // so that we reliably find buffer overflows in it.
@@ -564,6 +578,14 @@ void Fuzzer::ExecuteCallback(const uint8_t *Data, size_t Size) {
     CrashOnOverwrittenData();
   CurrentUnitSize = 0;
   delete[] DataCopy;
+}
+
+void Fuzzer::OutputTestCases() {
+  std::string Path = "fuzz-" + std::to_string(Options.id)+ "-testcases.log";
+  std::string vec = "";
+  for (auto sha1:Sha1Vector) vec += sha1 + "\n";
+  WriteToFile(vec, Path);
+  Sha1Vector.clear();
 }
 
 std::string Fuzzer::WriteToOutputCorpus(const Unit &U) {
@@ -695,6 +717,7 @@ void Fuzzer::MutateAndTestOne() {
     II.NumExecutedMutations++;
 
     bool FoundUniqFeatures = false;
+
     bool NewCov = RunOne(CurrentUnitData, Size, /*MayDeleteFile=*/true, &II,
                          &FoundUniqFeatures);
     TryDetectingAMemoryLeak(CurrentUnitData, Size,

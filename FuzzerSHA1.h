@@ -19,6 +19,7 @@ namespace fuzzer {
 
 // Private copy of SHA1 implementation.
 static const int kSHA1NumBytes = 20;
+typedef uint8_t Sha1Hash[kSHA1NumBytes];
 
 // Computes SHA1 hash of 'Len' bytes in 'Data', writes kSHA1NumBytes to 'Out'.
 void ComputeSHA1(const uint8_t *Data, size_t Len, uint8_t *Out);
