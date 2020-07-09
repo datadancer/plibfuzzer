@@ -349,6 +349,7 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
     Printf(" units: %zd", Units);
 
   Printf(" exec/s: %zd", ExecPerSec);
+  Printf(" seconds: %zd", secondsSinceProcessStartUp());
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
 }
@@ -582,7 +583,8 @@ void Fuzzer::ExecuteCallback(const uint8_t *Data, size_t Size) {
 
 void Fuzzer::OutputTestCases() {
   std::string Path = "fuzz-" + std::to_string(Options.id)+ "-testcases.log";
-  std::string vec = "";
+  std::string vec = "SecondsSinceProcessStartUp: ";
+  vec += std::to_string(secondsSinceProcessStartUp()) + "\n";
   for (auto sha1:Sha1Vector) vec += sha1 + "\n";
   WriteToFile(vec, Path);
   Sha1Vector.clear();
