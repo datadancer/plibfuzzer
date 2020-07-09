@@ -40,7 +40,7 @@ struct FuzzingOptions {
   int UseValueProfile = false;
   bool Shrink = false;
   bool ReduceInputs = false;
-  int ReloadIntervalSec = 1;
+  int ReloadIntervalSec = 100;
   bool ShuffleAtStartUp = true;
   bool PreferSmall = true;
   size_t MaxNumberOfRuns = -1L;

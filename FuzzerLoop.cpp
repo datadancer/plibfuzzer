@@ -828,7 +828,7 @@ void Fuzzer::Loop(Vector<SizedFile> &CorporaFiles) {
     if (!Options.StopFile.empty() &&
         !FileToVector(Options.StopFile, 1, false).empty())
       break;
-    if (duration_cast<seconds>(Now - LastCorpusReload).count() >=
+    if (duration_cast<milliseconds>(Now - LastCorpusReload).count() >=
         Options.ReloadIntervalSec) {
       RereadOutputCorpus(MaxInputLen);
       LastCorpusReload = system_clock::now();
