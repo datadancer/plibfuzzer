@@ -57,6 +57,7 @@ struct FuzzingOptions {
   std::string FeaturesDir;
   std::string StopFile;
   bool SaveArtifacts = true;
+  bool SaveSeeds = true;
   bool PrintNEW = true; // Print a status line when new units are found;
   bool PrintNewCovPcs = false;
   int PrintNewCovFuncs = 0;

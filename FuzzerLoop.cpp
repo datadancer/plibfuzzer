@@ -630,8 +630,10 @@ void Fuzzer::ReportNewCoverage(InputInfo *II, const Unit &U) {
   II->NumSuccessfullMutations++;
   MD.RecordSuccessfulMutationSequence();
   PrintStatusForNewUnit(U, II->Reduced ? "REDUCE" : "NEW   ");
-  WriteToOutputCorpus(U);
-  NumberOfNewUnitsAdded++;
+  if (Options.SaveSeeds) {
+    WriteToOutputCorpus(U);
+    NumberOfNewUnitsAdded++;
+  }
   CheckExitOnSrcPosOrItem(); // Check only after the unit is saved to corpus.
   LastCorpusUpdateRun = TotalNumberOfRuns;
 }

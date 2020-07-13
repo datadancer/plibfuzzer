@@ -699,6 +699,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.PrintCorpusStats = Flags.print_corpus_stats;
   Options.PrintCoverage = Flags.print_coverage;
   Options.id = Flags.id;
+  Options.SaveSeeds = Flags.save_seeds;
   if (Flags.exit_on_src_pos)
     Options.ExitOnSrcPos = Flags.exit_on_src_pos;
   if (Flags.exit_on_item)
