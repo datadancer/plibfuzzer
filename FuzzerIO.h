@@ -31,6 +31,9 @@ void WriteToFile(const Unit &U, const std::string &Path);
 
 void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
                             long *Epoch, size_t MaxSize, bool ExitOnError);
+void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
+                            long *Epoch, size_t MaxSize, bool ExitOnError, 
+			    int id, int total);
 
 // Returns "Dir/FileName" or equivalent for the current OS.
 std::string DirPlusFile(const std::string &DirPath,

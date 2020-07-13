@@ -78,6 +78,27 @@ void WriteToFile(const uint8_t *Data, size_t Size, const std::string &Path) {
 }
 
 void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
+                            long *Epoch, size_t MaxSize, bool ExitOnError, int id, int total) {
+  long E = Epoch ? *Epoch : 0;
+  Vector<std::string> Files;
+  ListFilesInDirRecursive(Path, Epoch, &Files, /*TopDir*/true);
+  size_t NumLoaded = 0;
+  for (size_t i = 0; i < Files.size(); i++) {
+    auto &X = Files[i];
+    if (Epoch && GetEpoch(X) < E) continue;
+
+    int prefix = std::stoi(X.substr(0,2), NULL, 16);
+    if (prefix % total != id) continue;
+
+    NumLoaded++;
+    if ((NumLoaded & (NumLoaded - 1)) == 0 && NumLoaded >= 1024)
+      Printf("Loaded %zd/%zd files from %s\n", NumLoaded, Files.size(), Path);
+    auto S = FileToVector(X, MaxSize, ExitOnError);
+    if (!S.empty())
+      V->push_back(S);
+  }
+}
+void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
                             long *Epoch, size_t MaxSize, bool ExitOnError) {
   long E = Epoch ? *Epoch : 0;
   Vector<std::string> Files;

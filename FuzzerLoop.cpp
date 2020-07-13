@@ -420,7 +420,12 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
   if (Options.OutputCorpus.empty() || !Options.ReloadIntervalSec)
     return;
   Vector<Unit> AdditionalCorpus;
-  ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
+  if(Options.Group)
+    ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
+                         &EpochOfLastReadOfOutputCorpus, MaxSize,
+                         /*ExitOnError*/ false, Options.id, Options.Total);
+  else
+    ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
                          &EpochOfLastReadOfOutputCorpus, MaxSize,
                          /*ExitOnError*/ false);
   if (Options.Verbosity >= 2)

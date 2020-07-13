@@ -229,6 +229,7 @@ static void WorkerThread(const Command &BaseCmd, std::atomic<unsigned> *Counter,
     Cmd.setOutputFile(Log);
     Cmd.combineOutAndErr();
     Cmd.addFlag("id", std::to_string(C));
+    Cmd.addFlag("total", std::to_string(NumJobs));
     if (Flags.verbosity) {
       std::string CommandLine = Cmd.toString();
       Printf("%s\n", CommandLine.c_str());
@@ -699,6 +700,8 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.PrintCorpusStats = Flags.print_corpus_stats;
   Options.PrintCoverage = Flags.print_coverage;
   Options.id = Flags.id;
+  Options.Total = Flags.total;
+  Options.Group = Flags.group;
   Options.SaveSeeds = Flags.save_seeds;
   if (Flags.exit_on_src_pos)
     Options.ExitOnSrcPos = Flags.exit_on_src_pos;
