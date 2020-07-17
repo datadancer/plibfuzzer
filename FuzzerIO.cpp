@@ -78,7 +78,7 @@ void WriteToFile(const uint8_t *Data, size_t Size, const std::string &Path) {
 }
 
 void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
-                            long *Epoch, size_t MaxSize, bool ExitOnError, int id, int total) {
+                            long *Epoch, size_t MaxSize, bool ExitOnError, int id, int total, int group) {
   long E = Epoch ? *Epoch : 0;
   Vector<std::string> Files;
   ListFilesInDirRecursive(Path, Epoch, &Files, /*TopDir*/true);
@@ -88,7 +88,10 @@ void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
     if (Epoch && GetEpoch(X) < E) continue;
 
     int prefix = std::stoi(X.substr(0,2), NULL, 16);
-    if (prefix % total != id) continue;
+    /* if id is 0, then load all new testcases
+     * else just load the testcase belonging to its group 
+     */
+    if( id!=0 ) if (prefix % group != id % group) continue;
 
     NumLoaded++;
     if ((NumLoaded & (NumLoaded - 1)) == 0 && NumLoaded >= 1024)

@@ -33,7 +33,7 @@ void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
                             long *Epoch, size_t MaxSize, bool ExitOnError);
 void ReadDirToVectorOfUnits(const char *Path, Vector<Unit> *V,
                             long *Epoch, size_t MaxSize, bool ExitOnError, 
-			    int id, int total);
+			    int id, int total, int group);
 
 // Returns "Dir/FileName" or equivalent for the current OS.
 std::string DirPlusFile(const std::string &DirPath,
