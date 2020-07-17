@@ -482,9 +482,11 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
     return false;
 
   // Record this unit:CurrentUnitData.
-  Sha1Hash TmpSha1;
-  ComputeSHA1(CurrentUnitData, Size, TmpSha1);
-  Sha1Vector.push_back(Sha1ToString(TmpSha1));
+  if (Options.SaveHash){
+    Sha1Hash TmpSha1;
+    ComputeSHA1(CurrentUnitData, Size, TmpSha1);
+    Sha1Vector.push_back(Sha1ToString(TmpSha1));
+  }
 
   ExecuteCallback(Data, Size);
 
@@ -587,6 +589,7 @@ void Fuzzer::ExecuteCallback(const uint8_t *Data, size_t Size) {
 }
 
 void Fuzzer::OutputTestCases() {
+  if (Sha1Vector.size() == 0) return;
   std::string Path = "fuzz-" + std::to_string(Options.id)+ "-testcases.log";
   std::string vec = "SecondsSinceProcessStartUp: ";
   vec += std::to_string(secondsSinceProcessStartUp()) + "\n";

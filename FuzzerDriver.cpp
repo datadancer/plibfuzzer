@@ -703,6 +703,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.Total = Flags.total;
   Options.Group = Flags.group;
   Options.SaveSeeds = Flags.save_seeds;
+  Options.SaveHash = Flags.save_hash;
   if (Flags.exit_on_src_pos)
     Options.ExitOnSrcPos = Flags.exit_on_src_pos;
   if (Flags.exit_on_item)
