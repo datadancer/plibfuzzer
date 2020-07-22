@@ -33,6 +33,7 @@ struct InputInfo {
   // Stats.
   size_t NumExecutedMutations = 0;
   size_t NumSuccessfullMutations = 0;
+  int KeyRing = 0;
   bool MayDeleteFile = false;
   bool Reduced = false;
   bool HasFocusFunction = false;
@@ -85,6 +86,17 @@ class InputCorpus {
 
   bool empty() const { return Inputs.empty(); }
   const Unit &operator[] (size_t Idx) const { return Inputs[Idx]->U; }
+  InputInfo *AddToCorpus(InputInfo *II) {
+     if (FeatureDebug)
+       Printf("ADD_TO_CORPUS %zd NF %zd\n", Inputs.size(), II->NumFeatures);
+     Inputs.push_back(II);
+     auto Sha1Str = Sha1ToString(II->Sha1);
+     Hashes.insert(Sha1Str);
+     UpdateCorpusDistribution();
+     PrintCorpus();
+     return II;
+  }
+
   InputInfo *AddToCorpus(const Unit &U, size_t NumFeatures, bool MayDeleteFile,
                          bool HasFocusFunction,
                          const Vector<uint32_t> &FeatureSet,

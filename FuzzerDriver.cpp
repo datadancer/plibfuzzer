@@ -18,6 +18,7 @@
 #include "FuzzerMutate.h"
 #include "FuzzerRandom.h"
 #include "FuzzerTracePC.h"
+#include "FuzzerShare.h"
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -701,6 +702,10 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.PrintCoverage = Flags.print_coverage;
   Options.id = Flags.id;
   Options.Total = Flags.total;
+
+  CreateLog(Flags.id);
+  AttachLog((Flags.id+1) % Flags.total);
+
   Options.Group = Flags.group;
   Options.SaveSeeds = Flags.save_seeds;
   Options.SaveHash = Flags.save_hash;

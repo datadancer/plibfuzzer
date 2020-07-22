@@ -15,6 +15,7 @@
 #include "FuzzerMutate.h"
 #include "FuzzerRandom.h"
 #include "FuzzerTracePC.h"
+#include "FuzzerShare.h"
 #include <algorithm>
 #include <cstring>
 #include <memory>
@@ -419,28 +420,50 @@ void Fuzzer::CheckExitOnSrcPosOrItem() {
 void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
   if (Options.OutputCorpus.empty() || !Options.ReloadIntervalSec)
     return;
-  Vector<Unit> AdditionalCorpus;
-  if(Options.Group > 0)
-    ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
-                         &EpochOfLastReadOfOutputCorpus, MaxSize,
-                         /*ExitOnError*/ false, Options.id, Options.Total, Options.Group);
-  else
-    ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
-                         &EpochOfLastReadOfOutputCorpus, MaxSize,
-                         /*ExitOnError*/ false);
-  if (Options.Verbosity >= 2)
-    Printf("Reload: read %zd new units.\n", AdditionalCorpus.size());
+  //Vector<Unit> AdditionalCorpus;
+  //if(Options.Group > 0)
+  //  ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
+  //                       &EpochOfLastReadOfOutputCorpus, MaxSize,
+  //                       /*ExitOnError*/ false, Options.id, Options.Total, Options.Group);
+  //else
+  //  ReadDirToVectorOfUnits(Options.OutputCorpus.c_str(), &AdditionalCorpus,
+  //                       &EpochOfLastReadOfOutputCorpus, MaxSize,
+  //                       /*ExitOnError*/ false);
+  //if (Options.Verbosity >= 2)
+  //  Printf("Reload: read %zd new units.\n", AdditionalCorpus.size());
   bool Reloaded = false;
-  for (auto &U : AdditionalCorpus) {
-    if (U.size() > MaxSize)
-      U.resize(MaxSize);
-    if (!Corpus.HasUnit(U)) {
-      if (RunOne(U.data(), U.size())) {
-        CheckExitOnSrcPosOrItem();
-        Reloaded = true;
-      }
-    }
-  }
+  //for (auto &U : AdditionalCorpus) {
+  //  if (U.size() > MaxSize)
+  //    U.resize(MaxSize);
+  //  if (!Corpus.HasUnit(U)) {
+  //    if (RunOne(U.data(), U.size())) {
+  //      CheckExitOnSrcPosOrItem();
+  //      Reloaded = true;
+  //    }
+  //  }
+  //}
+   InputInfo * II;
+   while((II = PopInputInfo()) != NULL) {
+     if(II->U.size() > MaxSize) II->U.resize(MaxSize);
+     if(!Corpus.HasUnit(II->U)){
+ 	II->HasFocusFunction = false;
+  	if(Options.Group > 0) {
+            /* if id is 0, then load all new testcases
+             * else just load the testcase belonging to its group 
+             */
+            if(Options.id == 0 || (II->Sha1[0] % Options.Group == Options.id % Options.Group)) {
+     	        Corpus.AddToCorpus(II);
+ 	        Reloaded = true;
+	    } 
+	} else {
+     	    Corpus.AddToCorpus(II);
+ 	    Reloaded = true;
+	}
+        II->KeyRing -= 1;
+        if(II->KeyRing > 0) PushInputInfo(II);
+     }
+   }
+
   if (Reloaded)
     PrintStats("RELOAD");
 }
@@ -512,6 +535,9 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
                                     UniqFeatureSetTmp, DFT, II);
     WriteFeatureSetToFile(Options.FeaturesDir, Sha1ToString(NewII->Sha1),
                           NewII->UniqFeatureSet);
+    //Pass the for Total times
+    NewII->KeyRing = Options.Total;
+    PushInputInfo(NewII);
     return true;
   }
   if (II && FoundUniqFeaturesOfII &&
