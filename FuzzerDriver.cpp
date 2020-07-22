@@ -702,13 +702,15 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.PrintCoverage = Flags.print_coverage;
   Options.id = Flags.id;
   Options.Total = Flags.total;
-
-  CreateLog(Flags.id);
-  AttachLog((Flags.id+1) % Flags.total);
-
   Options.Group = Flags.group;
   Options.SaveSeeds = Flags.save_seeds;
   Options.SaveHash = Flags.save_hash;
+
+  Options.Shm = Flags.shm;
+  if (Options.Shm) {
+      CreateLog(Flags.id);
+      AttachLog((Flags.id+1) % Flags.total);
+  }
   if (Flags.exit_on_src_pos)
     Options.ExitOnSrcPos = Flags.exit_on_src_pos;
   if (Flags.exit_on_item)

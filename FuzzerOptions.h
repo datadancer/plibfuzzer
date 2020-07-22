@@ -19,6 +19,7 @@ struct FuzzingOptions {
   int Total = 1;
   int Group = 0;
   int BaseRuns = 10000;
+  bool Shm = false;
   bool SaveHash = false;
   int Verbosity = 1;
   size_t MaxLen = 0;

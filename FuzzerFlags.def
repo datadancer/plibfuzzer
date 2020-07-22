@@ -87,6 +87,7 @@ FUZZER_FLAG_INT(total, 0, "If 1, total workers in parallel mode. Used for seed g
 FUZZER_FLAG_INT(shrink, 0, "Experimental. Try to shrink corpus inputs.")
 FUZZER_FLAG_INT(reduce_inputs, 1,
   "Try to reduce the size of inputs while preserving their full feature sets")
+FUZZER_FLAG_UNSIGNED(shm, 0, "Share corpus in memory using shm.")
 FUZZER_FLAG_UNSIGNED(id, 0, "ID Number of jobs.")
 FUZZER_FLAG_UNSIGNED(jobs, 0, "Number of jobs to run. If jobs >= 1 we spawn"
                           " this number of jobs in separate worker processes"
