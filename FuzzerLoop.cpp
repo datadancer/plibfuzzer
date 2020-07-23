@@ -351,7 +351,7 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
 
   Printf(" exec/s: %zd", ExecPerSec);
   Printf(" seconds: %zd", secondsSinceProcessStartUp());
-  Printf(" syncs: %zd", TimeOfCorpusSyncInMiliSeconds/1000);
+  Printf(" syncms: %zd", TimeOfCorpusSyncInMilliSeconds);
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
 }
@@ -469,8 +469,8 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
         }
       }
   }
-  auto ThisSyncTimeInSeconds = duration_cast<seconds>(system_clock::now() - ThisSyncTime).count();
-  TimeOfCorpusSyncInMiliSeconds += ThisSyncTimeInSeconds;
+  auto ThisSyncTimeInMilliSeconds = duration_cast<milliseconds>(system_clock::now() - ThisSyncTime).count();
+  TimeOfCorpusSyncInMilliSeconds += ThisSyncTimeInMilliSeconds;
   if (Reloaded)
     PrintStats("RELOAD");
 }
