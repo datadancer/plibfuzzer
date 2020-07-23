@@ -671,9 +671,9 @@ void Fuzzer::ReportNewCoverage(InputInfo *II, const Unit &U) {
   if (Options.SaveSeeds) {
     WriteToOutputCorpus(U);
     NumberOfNewUnitsAdded++;
+    CheckExitOnSrcPosOrItem(); // Check only after the unit is saved to corpus.
+    LastCorpusUpdateRun = TotalNumberOfRuns;
   }
-  CheckExitOnSrcPosOrItem(); // Check only after the unit is saved to corpus.
-  LastCorpusUpdateRun = TotalNumberOfRuns;
 }
 
 // Tries detecting a memory leak on the particular input that we have just
