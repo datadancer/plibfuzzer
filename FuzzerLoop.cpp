@@ -616,13 +616,12 @@ void Fuzzer::ExecuteCallback(const uint8_t *Data, size_t Size) {
     AllocTracer.Start(Options.TraceMalloc);
     UnitStartTime = system_clock::now();
     TPC.ResetMaps();
-    auto ThisCallbackTime = system_clock::now();
     RunningUserCallback = true;
     int Res = CB(DataCopy, Size);
     RunningUserCallback = false;
-    auto ThisCallbackTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisCallbackTime).count();
-    TimeOfCBInNanoSeconds += ThisCallbackTimeInNanoSeconds;
     UnitStopTime = system_clock::now();
+    auto ThisCallbackTimeInNanoSeconds = duration_cast<nanoseconds>(UnitStopTime - UnitStartTime).count();
+    TimeOfCBInNanoSeconds += ThisCallbackTimeInNanoSeconds;
     (void)Res;
     assert(Res == 0);
     HasMoreMallocsThanFrees = AllocTracer.Stop();
