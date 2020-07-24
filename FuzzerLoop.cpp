@@ -352,6 +352,7 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
   Printf(" exec/s: %zd", ExecPerSec);
   Printf(" seconds: %zd", secondsSinceProcessStartUp());
   Printf(" syncns: %zd", TimeOfCorpusSyncInNanoSeconds);
+  Printf(" run1ns: %zd", TimeOfRunOneInNanoSeconds);
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
 }
@@ -766,8 +767,11 @@ void Fuzzer::MutateAndTestOne() {
 
     bool FoundUniqFeatures = false;
 
+    auto ThisRunOneTime = system_clock::now();
     bool NewCov = RunOne(CurrentUnitData, Size, /*MayDeleteFile=*/true, &II,
                          &FoundUniqFeatures);
+    auto ThisRunOneTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisRunOneTime).count();
+    TimeOfRunOneInNanoSeconds += ThisRunOneTimeInNanoSeconds;
     TryDetectingAMemoryLeak(CurrentUnitData, Size,
                             /*DuringInitialCorpusExecution*/ false);
     if (NewCov) {

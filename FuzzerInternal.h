@@ -136,6 +136,8 @@ private:
   system_clock::time_point ProcessStartTime = system_clock::now();
   system_clock::time_point UnitStartTime, UnitStopTime;
   long TimeOfCorpusSyncInNanoSeconds = 0;
+  long TimeOfMutateInNanoSeconds = 0;
+  long TimeOfRunOneInNanoSeconds = 0;
   long TimeOfLongestUnitInSeconds = 0;
   long EpochOfLastReadOfOutputCorpus = 0;
 
