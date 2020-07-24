@@ -139,6 +139,7 @@ private:
   long TimeOfMutateInNanoSeconds = 0;
   long TimeOfRunOneInNanoSeconds = 0;
   long TimeOfCallbackInNanoSeconds = 0;
+  long TimeOfCBInNanoSeconds = 0;
   long TimeOfLongestUnitInSeconds = 0;
   long EpochOfLastReadOfOutputCorpus = 0;
 
