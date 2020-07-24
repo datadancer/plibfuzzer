@@ -353,6 +353,7 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
   Printf(" seconds: %zd", secondsSinceProcessStartUp());
   Printf(" syncns: %zd", TimeOfCorpusSyncInNanoSeconds);
   Printf(" run1ns: %zd", TimeOfRunOneInNanoSeconds);
+  Printf(" callbk: %zd", TimeOfCallbackInNanoSeconds);
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
 }
@@ -520,7 +521,10 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
     Sha1Vector.push_back(Sha1ToString(TmpSha1));
   }
 
+  auto ThisCallbackTime = system_clock::now();
   ExecuteCallback(Data, Size);
+  auto ThisCallbackTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisCallbackTime).count();
+  TimeOfCallbackInNanoSeconds += ThisCallbackTimeInNanoSeconds;
 
   UniqFeatureSetTmp.clear();
   size_t FoundUniqFeaturesOfII = 0;
