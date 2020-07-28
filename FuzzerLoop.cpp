@@ -814,11 +814,15 @@ void Fuzzer::ReadAndExecuteSeedCorpora(Vector<SizedFile> &CorporaFiles) {
   size_t MaxSize = 0;
   size_t MinSize = -1;
   size_t TotalSize = 0;
+  bool Repeat = Options.Repeat;
+  Options.Repeat = false;
+
   for (auto &File : CorporaFiles) {
     MaxSize = Max(File.Size, MaxSize);
     MinSize = Min(File.Size, MinSize);
     TotalSize += File.Size;
   }
+
   if (Options.MaxLen == 0)
     SetMaxInputLen(std::min(std::max(kMinDefaultLen, MaxSize), kMaxSaneLen));
   assert(MaxInputLen > 0);
@@ -853,6 +857,7 @@ void Fuzzer::ReadAndExecuteSeedCorpora(Vector<SizedFile> &CorporaFiles) {
                               /*DuringInitialCorpusExecution*/ true);
     }
   }
+  Options.Repeat = Repeat;
 
   PrintStats("INITED");
   if (!Options.FocusFunction.empty())
