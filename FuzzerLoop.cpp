@@ -527,6 +527,9 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
   auto ThisCallbackTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisCallbackTime).count();
   TimeOfCallbackInNanoSeconds += ThisCallbackTimeInNanoSeconds;
 
+  if (Options.Repeat)
+    return false;
+
   UniqFeatureSetTmp.clear();
   size_t FoundUniqFeaturesOfII = 0;
   size_t NumUpdatesBefore = Corpus.NumFeatureUpdates();

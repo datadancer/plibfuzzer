@@ -82,6 +82,7 @@ FUZZER_FLAG_INT(use_value_profile, 0,
 FUZZER_FLAG_INT(use_cmp, 1, "Use CMP traces to guide mutations")
 FUZZER_FLAG_INT(save_seeds, 1, "Save new instresting seed.")
 FUZZER_FLAG_INT(save_hash, 0, "Save testcase hash.")
+FUZZER_FLAG_INT(repeat, 0, "Repeat mutating and testing, for benchmark and debug.")
 FUZZER_FLAG_INT(group, 0, "The group number of workers in parallel mode. If 0, do not group workers.")
 FUZZER_FLAG_INT(total, 0, "If 1, total workers in parallel mode. Used for seed group")
 FUZZER_FLAG_INT(shrink, 0, "Experimental. Try to shrink corpus inputs.")

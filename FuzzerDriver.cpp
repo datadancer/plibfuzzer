@@ -705,6 +705,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.Group = Flags.group;
   Options.SaveSeeds = Flags.save_seeds;
   Options.SaveHash = Flags.save_hash;
+  Options.Repeat = Flags.repeat;
 
   Options.Shm = Flags.shm;
   if (Options.Shm) {
