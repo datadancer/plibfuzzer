@@ -464,22 +464,24 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
       if (Options.Verbosity >= 2)
         Printf("Reload: read %zd new units.\n", AdditionalCorpus.size());
 
-      bool tmpb = Options.SaveHash;
-      Options.SaveHash = false;
+      //bool tmpb = Options.SaveHash;
+      //Options.SaveHash = false;
       for (auto &U : AdditionalCorpus) {
+	if (BadCorpusHashes.count(Hash(U))) continue;
         if (U.size() > MaxSize)
           U.resize(MaxSize);
 	if (BadCorpusHashes.count(Hash(U))) continue;
+
+	BadCorpusHashes.insert(Hash(U));
+
         if (!Corpus.HasUnit(U)) {
           if (RunOne(U.data(), U.size())) {
             CheckExitOnSrcPosOrItem();
             Reloaded = true;
-          } else {
-	    BadCorpusHashes.insert(Hash(U));
-	  }
+          }
         }
       }
-      Options.SaveHash = tmpb;
+      //Options.SaveHash = tmpb;
   }
   auto ThisSyncTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisSyncTime).count();
   //auto ThisSyncTimeInNanoSeconds = duration_cast<milliseconds>(system_clock::now() - ThisSyncTime).count();
