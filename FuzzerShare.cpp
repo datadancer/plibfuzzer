@@ -155,6 +155,7 @@ void PushInputInfo(InputInfo *II) {
     PushValue(spbottom, mhead, II->MayDeleteFile);
     PushValue(spbottom, mhead, II->Reduced);
     PushValue(spbottom, mhead, II->HasFocusFunction);
+    PushValue(spbottom, mhead, II->KeyRing);
     PushVector(spbottom, mhead, &II->UniqFeatureSet);
     PushVector(spbottom, mhead, &II->DataFlowTraceForFocusFunction);
 
@@ -182,6 +183,7 @@ InputInfo *PopInputInfo() {
 
     PopVector(spbottom, mhead, &II->DataFlowTraceForFocusFunction);
     PopVector(spbottom, mhead, &II->UniqFeatureSet);
+    PopValue(spbottom, mhead, &II->KeyRing);
     PopValue(spbottom, mhead, &II->HasFocusFunction);
     PopValue(spbottom, mhead, &II->Reduced);
     PopValue(spbottom, mhead, &II->MayDeleteFile);
