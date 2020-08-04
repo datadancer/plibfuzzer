@@ -449,9 +449,9 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
             RunOne(II->U.data(), II->U.size()); //Execute RunOne to add to corpus
             Reloaded = true;
           }
-          II->KeyRing -= 1;
-          if(II->KeyRing > 0) PushInputInfo(II);
        }
+       II->KeyRing -= 1;
+       if(II->KeyRing > 0) PushInputInfo(II);
      }
      Options.SaveHash = tmpb;
   } else {
