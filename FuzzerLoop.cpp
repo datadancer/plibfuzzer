@@ -466,11 +466,14 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
       for (auto &U : AdditionalCorpus) {
         if (U.size() > MaxSize)
           U.resize(MaxSize);
+	if (BadCorpusHashes.count(Hash(U))) continue;
         if (!Corpus.HasUnit(U)) {
           if (RunOne(U.data(), U.size())) {
             CheckExitOnSrcPosOrItem();
             Reloaded = true;
-          }
+          } else {
+	    BadCorpusHashes.insert(Hash(U));
+	  }
         }
       }
   }

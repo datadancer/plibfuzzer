@@ -129,6 +129,7 @@ private:
 
   UserCallback CB;
   InputCorpus &Corpus;
+  std::unordered_set<std::string> BadCorpusHashes;
   MutationDispatcher &MD;
   FuzzingOptions Options;
   DataFlowTrace DFT;
