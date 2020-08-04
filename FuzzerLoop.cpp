@@ -429,6 +429,8 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
 
   if(Options.Shm) {
      InputInfo * II;
+     bool tmpb = Options.SaveHash;
+     Options.SaveHash = !tmpb;
      while((II = PopInputInfo()) != NULL) {
        if(II->U.size() > MaxSize) II->U.resize(MaxSize);
        if(!Corpus.HasUnit(II->U)){
@@ -451,6 +453,7 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
           if(II->KeyRing > 0) PushInputInfo(II);
        }
      }
+     Options.SaveHash = tmpb;
   } else {
       Vector<Unit> AdditionalCorpus;
       if(Options.Group > 0)
