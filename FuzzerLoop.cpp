@@ -463,6 +463,9 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
                              /*ExitOnError*/ false);
       if (Options.Verbosity >= 2)
         Printf("Reload: read %zd new units.\n", AdditionalCorpus.size());
+
+      bool tmpb = Options.SaveHash;
+      Options.SaveHash = false;
       for (auto &U : AdditionalCorpus) {
         if (U.size() > MaxSize)
           U.resize(MaxSize);
@@ -476,6 +479,7 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
 	  }
         }
       }
+      Options.SaveHash = tmpb;
   }
   auto ThisSyncTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisSyncTime).count();
   //auto ThisSyncTimeInNanoSeconds = duration_cast<milliseconds>(system_clock::now() - ThisSyncTime).count();
