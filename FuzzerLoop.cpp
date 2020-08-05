@@ -572,8 +572,8 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
                           NewII->UniqFeatureSet);
     if(Options.Shm){
       //Pass the for Total times
-      NewII->KeyRing = Options.Total;
-      PushInputInfo(NewII);
+      NewII->KeyRing = Options.Total - 1;
+      if(NewII->KeyRing > 0) PushInputInfo(NewII);
     }
     return true;
   }
