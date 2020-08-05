@@ -14,8 +14,8 @@ struct MemHead {
     pthread_mutex_t mutex;
     size_t sp;
 };
-static unsigned int NumberOfPopedLogs = 0;
-static unsigned int NumberOfPushedLogs = 0;
+static long NumberOfPopedLogs = 0;
+static long NumberOfPushedLogs = 0;
 static void * MyLog = NULL;
 static int myshmid = 0;
 static void * NeighborLog = NULL;

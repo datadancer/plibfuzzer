@@ -169,7 +169,10 @@ void PushInputInfo(InputInfo *II) {
 
 InputInfo *PopInputInfo() {
     //Pop II from NeighborLog
-    if(NeighborLog == NULL)  return NULL; 
+    if(NeighborLog == NULL)  {
+	Printf("Error: Neighbor Log is null, skip popping.\n");
+	return NULL; 
+    }
 
     struct MemHead *mhead = (struct MemHead *)NeighborLog;
     pthread_mutex_t * mutex = &mhead->mutex;
