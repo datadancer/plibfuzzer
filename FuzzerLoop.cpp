@@ -354,7 +354,7 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
   Printf(" sync: %.2f", TimeOfCorpusSyncInNanoSeconds/1000000000.0);
   Printf(" run1: %.2f", TimeOfRunOneInNanoSeconds/1000000000.0);
   Printf(" callbk: %.2f", TimeOfCallbackInNanoSeconds/1000000000.0);
-  Printf(" CB: %zd", TimeOfCBInNanoSeconds);
+  Printf(" CB: %.2f", TimeOfCBInNanoSeconds/1000000000.0);
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
 }
