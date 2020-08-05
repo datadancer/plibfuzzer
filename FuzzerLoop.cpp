@@ -833,7 +833,9 @@ void Fuzzer::ReadAndExecuteSeedCorpora(Vector<SizedFile> &CorporaFiles) {
   size_t MinSize = -1;
   size_t TotalSize = 0;
   bool Repeat = Options.Repeat;
+  bool Shm = Options.Shm;
   Options.Repeat = false;
+  Options.Shm = false;
 
   for (auto &File : CorporaFiles) {
     MaxSize = Max(File.Size, MaxSize);
@@ -876,6 +878,7 @@ void Fuzzer::ReadAndExecuteSeedCorpora(Vector<SizedFile> &CorporaFiles) {
     }
   }
   Options.Repeat = Repeat;
+  Options.Shm = Shm;
 
   PrintStats("INITED");
   if (!Options.FocusFunction.empty())
