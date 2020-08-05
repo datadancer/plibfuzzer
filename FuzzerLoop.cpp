@@ -570,11 +570,6 @@ bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
                                     UniqFeatureSetTmp, DFT, II);
     WriteFeatureSetToFile(Options.FeaturesDir, Sha1ToString(NewII->Sha1),
                           NewII->UniqFeatureSet);
-    if(Options.Shm){
-      //Pass the for Total times
-      NewII->KeyRing = Options.Total - 1;
-      if(NewII->KeyRing > 0) PushInputInfo(NewII);
-    }
     return true;
   }
   if (II && FoundUniqFeaturesOfII &&
@@ -803,6 +798,11 @@ void Fuzzer::MutateAndTestOne() {
     TryDetectingAMemoryLeak(CurrentUnitData, Size,
                             /*DuringInitialCorpusExecution*/ false);
     if (NewCov) {
+      if(Options.Shm){
+        //Pass the for Total times
+        II.KeyRing = Options.Total - 1;
+        if(II.KeyRing > 0) PushInputInfo(&II);
+      }
       ReportNewCoverage(&II, {CurrentUnitData, CurrentUnitData + Size});
       break;  // We will mutate this input more in the next rounds.
     }
