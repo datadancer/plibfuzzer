@@ -204,6 +204,10 @@ InputInfo *PopInputInfo() {
     return II;
 }
 
+void PrintLogStats(){
+    Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
+    Printf("stat::poped_logs:               %zd\n", NumberOfPopedLogs);
+}
 //Flush out all the stale test cases from the instance id by force
 void FlushLog(int id) {
 

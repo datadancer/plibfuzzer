@@ -25,6 +25,7 @@ static size_t MAX_SHM = 100*1024*1024;
 //The log stack is : mutex sp data data data data
 int CreateLog(int id);
 
+void PrintLogStats();
 //Attach to the test case log belonging to the fuzzer instance id
 int AttachLog(int id);
 

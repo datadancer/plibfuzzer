@@ -380,8 +380,7 @@ void Fuzzer::PrintFinalStats() {
   Printf("stat::slowest_unit_time_sec:    %zd\n", TimeOfLongestUnitInSeconds);
   Printf("stat::peak_rss_mb:              %zd\n", GetPeakRSSMb());
   if(Options.Shm) {
-    Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
-    Printf("stat::poped_logs:               %zd\n", NumberOfPopedLogs);
+    PrintLogStats();
   }
 }
 
