@@ -706,6 +706,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   Options.SaveSeeds = Flags.save_seeds;
   Options.SaveHash = Flags.save_hash;
   Options.Repeat = Flags.repeat;
+  Options.SmartMutate = Flags.smart_mutate;
 
   Options.Shm = Flags.shm;
   if (Options.Shm) {
@@ -847,6 +848,9 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
     Printf("Done %zd runs in %zd second(s)\n", F->getTotalNumberOfRuns(),
            F->secondsSinceProcessStartUp());
   F->PrintFinalStats();
+  if (Options.Shm) {
+    CloseLog();
+  }
 
   exit(0);  // Don't let F destroy itself.
 }
