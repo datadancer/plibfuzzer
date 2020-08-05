@@ -377,7 +377,7 @@ void Fuzzer::PrintFinalStats() {
   Printf("stat::number_of_executed_units: %zd\n", TotalNumberOfRuns);
   Printf("stat::average_exec_per_sec:     %zd\n", ExecPerSec);
   Printf("stat::new_units_added:          %zd\n", NumberOfNewUnitsAdded);
-  Printf("stat::slowest_unit_time_sec:    %zf\n", TimeOfLongestUnitInSeconds);
+  Printf("stat::slowest_unit_time_sec:    %zd\n", TimeOfLongestUnitInSeconds);
   Printf("stat::peak_rss_mb:              %zd\n", GetPeakRSSMb());
   if(Options.Shm) {
     Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
