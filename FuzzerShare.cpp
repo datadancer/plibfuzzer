@@ -159,6 +159,7 @@ void PushInputInfo(InputInfo *II) {
     PushVector(spbottom, mhead, &II->UniqFeatureSet);
     PushVector(spbottom, mhead, &II->DataFlowTraceForFocusFunction);
 
+    NumberOfPushedLogs++;
     pthread_mutex_unlock(mutex);
 }
 
@@ -193,6 +194,8 @@ InputInfo *PopInputInfo() {
     PopValue(spbottom, mhead, &II->NumFeatures);
     PopSha1(spbottom, mhead, II->Sha1);
     PopVector(spbottom, mhead, &II->U);
+
+    NumberOfPopedLogs++;
 
     pthread_mutex_unlock(mutex);
     return II;
