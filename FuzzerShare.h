@@ -19,7 +19,7 @@ static unsigned int NumberOfPushedLogs = 0;
 static void * MyLog = NULL;
 static int myshmid = 0;
 static void * NeighborLog = NULL;
-static size_t MAX_SHM = 1024*1024;
+static size_t MAX_SHM = 100*1024*1024;
 //Create a shared in-memory test case log for the calling instance identified by id;
 //tc_size indicates the size of the metadata of a test case
 //The log stack is : mutex sp data data data data
