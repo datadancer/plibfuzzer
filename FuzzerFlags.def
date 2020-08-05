@@ -24,6 +24,8 @@ FUZZER_FLAG_STRING(seed_inputs, "A comma-separated list of input files "
   "to use as an additional seed corpus. Alternatively, an \"@\" followed by "
   "the name of a file containing the comma-seperated list.")
 FUZZER_FLAG_INT(cross_over, 1, "If 1, cross over inputs.")
+FUZZER_FLAG_INT(smart_mutate, 0,
+            "Smartly mutate critical parts of testcases.")
 FUZZER_FLAG_INT(mutate_depth, 5,
             "Apply this number of consecutive mutations to each input.")
 FUZZER_FLAG_INT(reduce_depth, 0, "Experimental/internal. "

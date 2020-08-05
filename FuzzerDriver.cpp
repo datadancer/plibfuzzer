@@ -849,7 +849,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
            F->secondsSinceProcessStartUp());
   F->PrintFinalStats();
   if (Options.Shm) {
-    CloseLog();
+    CloseLog(Options.id);
   }
 
   exit(0);  // Don't let F destroy itself.
