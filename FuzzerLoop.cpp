@@ -351,9 +351,9 @@ void Fuzzer::PrintStats(const char *Where, const char *End, size_t Units,
 
   Printf(" exec/s: %zd", ExecPerSec);
   Printf(" seconds: %zd", secondsSinceProcessStartUp());
-  Printf(" syncns: %zd", TimeOfCorpusSyncInNanoSeconds);
-  Printf(" run1ns: %zd", TimeOfRunOneInNanoSeconds);
-  Printf(" callbk: %zd", TimeOfCallbackInNanoSeconds);
+  Printf(" sync: %.2f", TimeOfCorpusSyncInNanoSeconds/1000000000.0);
+  Printf(" run1: %.2f", TimeOfRunOneInNanoSeconds/1000000000.0);
+  Printf(" callbk: %.2f", TimeOfCallbackInNanoSeconds/1000000000.0);
   Printf(" CB: %zd", TimeOfCBInNanoSeconds);
   Printf(" rss: %zdMb", GetPeakRSSMb());
   Printf("%s", End);
@@ -377,7 +377,7 @@ void Fuzzer::PrintFinalStats() {
   Printf("stat::number_of_executed_units: %zd\n", TotalNumberOfRuns);
   Printf("stat::average_exec_per_sec:     %zd\n", ExecPerSec);
   Printf("stat::new_units_added:          %zd\n", NumberOfNewUnitsAdded);
-  Printf("stat::slowest_unit_time_sec:    %zd\n", TimeOfLongestUnitInSeconds);
+  Printf("stat::slowest_unit_time_sec:    %zf\n", TimeOfLongestUnitInSeconds);
   Printf("stat::peak_rss_mb:              %zd\n", GetPeakRSSMb());
   if(Options.Shm) {
     Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
