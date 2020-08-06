@@ -89,6 +89,10 @@ void PushInputInfo(InputInfo *II) {
     struct InputInfoLog * logs = (struct InputInfoLog *)MyLogStart;
     struct InputInfoLog  iil = logs[(*HEAD) % NUM_LOGS];
 
+    if (Hash(II->U) != Sha1ToString(II->Sha1)) {
+	Printf("PUSH ERROR: Hash check failed");
+    }
+
     iil.filesz = II->U.size();
     if(iil.filesz > MAX_FILE_SIZE) {
 	    Printf("WARNING: Filesize is %zd\n", iil.UniqFeatureSetSize);
@@ -147,6 +151,9 @@ InputInfo *PopOneInputInfo(struct InputInfoLog &log){
 
     for(int i=0;i<log.UniqFeatureSetSize;i++){
 	II->UniqFeatureSet.push_back(log.UniqFeatureSet[i]);
+    }
+    if (Hash(II->U) != Sha1ToString(II->Sha1)) {
+	Printf("POP ERROR: Hash check failed");
     }
     return II;
 }
