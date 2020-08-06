@@ -9,6 +9,7 @@
 #include "FuzzerCorpus.h"
 #include "FuzzerShare.h"
 #include "FuzzerIO.h"
+
 namespace fuzzer {
 
 //Create a shared in-memory test case log for the calling instance identified by id;
@@ -40,7 +41,7 @@ int CreateLog(int id, int total) {
     MyLog = smem;
     Printf("Log size is %d. Share memory could hold %d logs\n", sizeof(struct InputInfoLog), NUM_LOGS);
     Printf("Process %d: Create log %d success starting at %p\n", id, shmid, smem);
-    return 1;
+    return 0;
 }
 
 //Attach to the test case log belonging to the fuzzer instance id
@@ -87,39 +88,39 @@ void PushInputInfo(InputInfo *II) {
     if(MyLog == NULL) { Printf("Please CreateLog first\n"); exit(1); }
     void * MyLogStart = (char *)MyLog + sizeof(HEAD); //Head of MyLog is used for HEAD;
     struct InputInfoLog * logs = (struct InputInfoLog *)MyLogStart;
-    struct InputInfoLog  iil = logs[(*HEAD) % NUM_LOGS];
+    struct InputInfoLog * iil = logs+ ((*HEAD) % NUM_LOGS);
 
     if (Hash(II->U).compare(Sha1ToString(II->Sha1)) != 0) {
 	Printf("PUSH ERROR: Hash check failed");
     }
 
-    iil.filesz = II->U.size();
-    if(iil.filesz > MAX_FILE_SIZE) {
-	    Printf("WARNING: Filesize is %zd\n", iil.UniqFeatureSetSize);
-	    iil.filesz = MAX_FILE_SIZE;
+    iil->filesz = II->U.size();
+    if(iil->filesz > MAX_FILE_SIZE) {
+	    Printf("WARNING: Filesize is %zd\n", iil->UniqFeatureSetSize);
+	    iil->filesz = MAX_FILE_SIZE;
     }
-    memcpy(iil.U, II->U.data(), iil.filesz);
-    memcpy(iil.Sha1, II->Sha1, kSHA1NumBytes);
-    iil.NumFeatures = II->NumFeatures;
-    iil.Tmp = II->Tmp;
-    iil.NumExecutedMutations = 0;
-    iil.NumSuccessfullMutations = 0;
-    iil.MayDeleteFile = II->MayDeleteFile;
-    iil.HasFocusFunction = II->HasFocusFunction;
-    iil.KeyRing = II->KeyRing;
-    iil.UniqFeatureSetSize = II->UniqFeatureSet.size();
-    if (iil.UniqFeatureSetSize > 1024) {
-	    Printf("WARNING: UniqFeatureSetSize is %zd\n", iil.UniqFeatureSetSize);
-	    iil.UniqFeatureSetSize = 1024;//No large than 1024
+    memcpy(iil->U, II->U.data(), iil->filesz);
+    memcpy(iil->Sha1, II->Sha1, kSHA1NumBytes);
+    iil->NumFeatures = II->NumFeatures;
+    iil->Tmp = II->Tmp;
+    iil->NumExecutedMutations = 0;
+    iil->NumSuccessfullMutations = 0;
+    iil->MayDeleteFile = II->MayDeleteFile;
+    iil->HasFocusFunction = II->HasFocusFunction;
+    iil->KeyRing = II->KeyRing;
+    iil->UniqFeatureSetSize = II->UniqFeatureSet.size();
+    if (iil->UniqFeatureSetSize > 1024) {
+	    Printf("WARNING: UniqFeatureSetSize is %zd\n", iil->UniqFeatureSetSize);
+	    iil->UniqFeatureSetSize = 1024;//No large than 1024
     }
-    memcpy(iil.UniqFeatureSet, II->UniqFeatureSet.data(), iil.UniqFeatureSetSize);
+    memcpy(iil->UniqFeatureSet, II->UniqFeatureSet.data(), iil->UniqFeatureSetSize);
 
-    iil.DataFlowTraceForFocusFunctionSize = II->DataFlowTraceForFocusFunction.size();
-    if (iil.DataFlowTraceForFocusFunctionSize > 1024) {
-	    Printf("WARNING: DataFlowTraceForFocusFunctionSize is %zd\n", iil.DataFlowTraceForFocusFunctionSize);
-	    iil.DataFlowTraceForFocusFunctionSize = 1024;//No large than 1024
+    iil->DataFlowTraceForFocusFunctionSize = II->DataFlowTraceForFocusFunction.size();
+    if (iil->DataFlowTraceForFocusFunctionSize > 1024) {
+	    Printf("WARNING: DataFlowTraceForFocusFunctionSize is %zd\n", iil->DataFlowTraceForFocusFunctionSize);
+	    iil->DataFlowTraceForFocusFunctionSize = 1024;//No large than 1024
     }
-    memcpy(iil.DataFlowTraceForFocusFunction, II->DataFlowTraceForFocusFunction.data(), iil.DataFlowTraceForFocusFunctionSize);
+    memcpy(iil->DataFlowTraceForFocusFunction, II->DataFlowTraceForFocusFunction.data(), iil->DataFlowTraceForFocusFunctionSize);
 
     NumberOfPushedLogs++;
     
@@ -175,6 +176,7 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     	LogStart = (char *)CurrentNeighborLog + sizeof(HEAD);
     	logs = (struct InputInfoLog *)LogStart;
     	for(long j=TAILS[i]; j < *head; j++){
+		Printf("Popping %d/%d from %d\n", j, *head, i); 
 		IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
     		NumberOfPopedLogs++;
     	}
@@ -231,7 +233,7 @@ void displayInputInfo(InputInfo *II){
 }
 
 }
-/*
+
 int tmain(int argc, char **argv){
     if(argc != 3) {
         printf("Usage: %s <ID> <N>\n", argv[0]);
@@ -242,17 +244,20 @@ int tmain(int argc, char **argv){
     int N = atoi(argv[2]);
     if (ID >= N) { std::cout<<"ERROR ID is bigger than N\n"; return 1; }
     int err;
-    err = fuzzer::CreateLog(ID);
-    if(!err) {
+    err = fuzzer::CreateLog(ID, N);
+    if(err) {
 	std::cout<<"CreateLog error"<<std::endl;
 	return 1;
     }
 
-    std::cout<<"CreateLog done.\n";
+    std::cout<<"CreateLog done. Input 0 to continue\n";
     std::cin>>err;
+    std::cout<<"Waiting 2 seconds\n";
+    sleep(2);
+    std::cout<<"Go on\n";
 
-    err = fuzzer::AttachLog((ID+1)%N);
-    if(!err) {
+    err = fuzzer::AttachLog();
+    if(err) {
 	std::cout<<"AttachLog error"<<std::endl;
 	return 1;
     }
@@ -278,22 +283,28 @@ int tmain(int argc, char **argv){
 
     while(true) {
 	if(loopcount++ > 100) break;
+	if(ID % 2) {
     	fuzzer::PushInputInfo(&II);
 
     	printf("\nProcess %d Say: Put II\n", ID);
 	displayInputInfo(&II);
+    	sleep(1);
+	} else {
     	
-    	fuzzer::InputInfo *II2;
+	fuzzer::Vector<fuzzer::InputInfo *> VII;
+    	fuzzer::PopInputInfo(VII);
 
-    	II2 = fuzzer::PopInputInfo();
-	if (II2 == NULL) continue;
+    	if (VII.size()>0) printf("\nProcess %d Say: Got II\n", ID);
+	else printf("\n Got nothing \n");
 
-    	printf("\nProcess %d Say: Get II\n", ID);
-	displayInputInfo(II2);
-
-	delete II2;
+	for(auto & II2: VII) displayInputInfo(II2);
+	}
     }
+
+    std::cout<<"Input 0 to exit\n";
+    std::cin>>err;
+    fuzzer::CloseLog(ID);
 
     return 0;
 }
-*/
+
