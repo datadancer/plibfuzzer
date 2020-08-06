@@ -160,7 +160,7 @@ InputInfo *PopOneInputInfo(struct InputInfoLog * log){
 }
 
 void PopInputInfo(Vector<InputInfo*> &IIV) {
-    int * head;
+    long * head;
     void * LogStart;
     struct InputInfoLog * logs; 
 
