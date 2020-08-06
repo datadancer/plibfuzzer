@@ -36,10 +36,9 @@ struct InputInfoLog {
 };
 
 static long * HEAD; //HEAD of current process
-static int * TAIL; //TAIL of current process
 static long TAILS[120] = {}; //Tails of other fuzzers
-static int ID;
-static int TOTAL;
+static long ID;
+static long TOTAL;
 static void * NeighborLog[120] = {};
 
 static long NumberOfPopedLogs = 0;
@@ -88,7 +87,7 @@ void PushInputInfo(InputInfo *II);
 //At the syncing phase, a fuzzer pops a test case from its neighbor 
 //(pop_testcase()) to examine whether the test case is useful or not.
 
-InputInfo *PopOneInputInfo(struct InputInfoLog &log);
+InputInfo *PopOneInputInfo(struct InputInfoLog * log);
 void PopInputInfo(Vector<InputInfo*> &IIV);
 
 //Flush out all the stale test cases from the instance id by force

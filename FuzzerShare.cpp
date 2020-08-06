@@ -130,27 +130,27 @@ void PushInputInfo(InputInfo *II) {
 //At the syncing phase, a fuzzer pops a test case from its neighbor 
 //(pop_testcase()) to examine whether the test case is useful or not.
 
-InputInfo *PopOneInputInfo(struct InputInfoLog &log){
+InputInfo *PopOneInputInfo(struct InputInfoLog * log){
     InputInfo *II = new InputInfo();
-    for(int i=0; i<log.filesz; i++){
-	II->U.push_back(log.U[i]);
+    for(int i=0; i<log->filesz; i++){
+	II->U.push_back(log->U[i]);
     }
 
-    memcpy(II->Sha1, log.Sha1, kSHA1NumBytes);
-    II->NumFeatures = log.NumFeatures;
-    II->Tmp = log.Tmp;
+    memcpy(II->Sha1, log->Sha1, kSHA1NumBytes);
+    II->NumFeatures = log->NumFeatures;
+    II->Tmp = log->Tmp;
     II->NumExecutedMutations = 0;
     II->NumSuccessfullMutations = 0;
-    II->MayDeleteFile = log.MayDeleteFile;
-    II->HasFocusFunction = log.HasFocusFunction;
-    II->KeyRing = log.KeyRing;
+    II->MayDeleteFile = log->MayDeleteFile;
+    II->HasFocusFunction = log->HasFocusFunction;
+    II->KeyRing = log->KeyRing;
 
-    for(int i=0;i<log.DataFlowTraceForFocusFunctionSize;i++){
-	II->DataFlowTraceForFocusFunction.push_back(log.DataFlowTraceForFocusFunction[i]);
+    for(int i=0;i<log->DataFlowTraceForFocusFunctionSize;i++){
+	II->DataFlowTraceForFocusFunction.push_back(log->DataFlowTraceForFocusFunction[i]);
     }
 
-    for(int i=0;i<log.UniqFeatureSetSize;i++){
-	II->UniqFeatureSet.push_back(log.UniqFeatureSet[i]);
+    for(int i=0;i<log->UniqFeatureSetSize;i++){
+	II->UniqFeatureSet.push_back(log->UniqFeatureSet[i]);
     }
 
     if (Hash(II->U).compare(Sha1ToString(II->Sha1)) != 0) {
@@ -163,7 +163,6 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     int * head;
     void * LogStart;
     struct InputInfoLog * logs; 
-    struct InputInfoLog  iil; 
 
     for(int i=0; i<TOTAL; i++){
 	if (i == ID) continue;
@@ -172,12 +171,11 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     	    //Printf("Error: Neighbor Log is null, skip popping.\n");
     	    continue;
     	}
-    	head = (int *)CurrentNeighborLog;
+    	head = (long *)CurrentNeighborLog;
     	LogStart = (char *)CurrentNeighborLog + sizeof(HEAD);
     	logs = (struct InputInfoLog *)LogStart;
-    	for(int j=TAILS[i]; j < *head; j++){
-    		iil = logs[j % NUM_LOGS];
-		IIV.push_back(PopOneInputInfo(iil));
+    	for(long j=TAILS[i]; j < *head; j++){
+		IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
     		NumberOfPopedLogs++;
     	}
 	TAILS[i] = * head; //Update current tail
