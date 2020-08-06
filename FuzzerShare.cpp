@@ -89,7 +89,7 @@ void PushInputInfo(InputInfo *II) {
     struct InputInfoLog * logs = (struct InputInfoLog *)MyLogStart;
     struct InputInfoLog  iil = logs[(*HEAD) % NUM_LOGS];
 
-    if (Hash(II->U) != Sha1ToString(II->Sha1)) {
+    if (Hash(II->U).compare(Sha1ToString(II->Sha1)) != 0) {
 	Printf("PUSH ERROR: Hash check failed");
     }
 
@@ -152,7 +152,8 @@ InputInfo *PopOneInputInfo(struct InputInfoLog &log){
     for(int i=0;i<log.UniqFeatureSetSize;i++){
 	II->UniqFeatureSet.push_back(log.UniqFeatureSet[i]);
     }
-    if (Hash(II->U) != Sha1ToString(II->Sha1)) {
+
+    if (Hash(II->U).compare(Sha1ToString(II->Sha1)) != 0) {
 	Printf("POP ERROR: Hash check failed");
     }
     return II;
