@@ -446,19 +446,23 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
                * else just load the testcase belonging to its group 
                */
               if(Options.id == 0 || (II->Sha1[0] % Options.Group == Options.id % Options.Group)) {
-       	        Corpus.AddToCorpus(II); //Add to corpus immediatially
-          	//RunOne(II->U.data(), II->U.size()); //Execute RunOne to add to corpus
-                Reloaded = true;
+       	        //Corpus.AddToCorpus(II); //Add to corpus immediatially
+          	if(RunOne(II->U.data(), II->U.size())){//Execute RunOne to add to corpus
+	          IncreaseNumberOfIntrestingPopedLogs();
+                  Reloaded = true;
+		}
               } 
           } else {
-       	    Corpus.AddToCorpus(II); //Add to corpus immidiatlly
-            //RunOne(II->U.data(), II->U.size()); //Execute RunOne to add to corpus
-            Reloaded = true;
+       	    //Corpus.AddToCorpus(II); //Add to corpus immidiatlly
+            if(RunOne(II->U.data(), II->U.size())){ //Execute RunOne to add to corpus
+	      IncreaseNumberOfIntrestingPopedLogs();
+              Reloaded = true;
+	    }
           }
        }
        //II->KeyRing -= 1;
        //if(II->KeyRing > 0) PushInputInfo(II);
-       //delete II; // not AddToCorpus
+       delete II; // not AddToCorpus
      }
      //Options.SaveHash = tmpb;
   } else {

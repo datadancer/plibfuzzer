@@ -43,6 +43,7 @@ static int TOTAL;
 static void * NeighborLog[120] = {};
 
 static long NumberOfPopedLogs = 0;
+static long NumberOfIntrestingPopedLogs = 0;
 static long NumberOfPushedLogs = 0;
 static void * MyLog = NULL;
 static int myshmid = 0;
@@ -53,6 +54,7 @@ static size_t NUM_LOGS = MAX_SHM/sizeof(InputInfoLog);
 //tc_size indicates the size of the metadata of a test case
 //The log stack is : mutex sp data data data data
 int CreateLog(int id, int total);
+void IncreaseNumberOfIntrestingPopedLogs();
 
 void PrintLogStats();
 //Attach to the test case log belonging to the fuzzer instance id

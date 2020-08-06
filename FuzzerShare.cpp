@@ -176,10 +176,15 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     }
 }
 
+void IncreaseNumberOfIntrestingPopedLogs(){
+	NumberOfIntrestingPopedLogs++;
+}
+
 void PrintLogStats(){
     Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
     Printf("stat::HEAD:                     %zd\n", *HEAD);
     Printf("stat::poped_logs:               %zd\n", NumberOfPopedLogs);
+    Printf("stat::intresting_poped_logs:    %zd\n", NumberOfIntrestingPopedLogs);
     for(int i=0; i<TOTAL; i++) {
     Printf("stat::poped_logs from %d:       %zd\n", i, TAILS[i]);
     }
