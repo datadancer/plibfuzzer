@@ -456,8 +456,8 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
             Reloaded = true;
           }
        }
-       II->KeyRing -= 1;
-       if(II->KeyRing > 0) PushInputInfo(II);
+       //II->KeyRing -= 1;
+       //if(II->KeyRing > 0) PushInputInfo(II);
        //delete II; // not AddToCorpus
      }
      //Options.SaveHash = tmpb;
