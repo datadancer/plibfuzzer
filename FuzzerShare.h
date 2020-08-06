@@ -35,9 +35,9 @@ struct InputInfoLog {
     uint8_t DataFlowTraceForFocusFunction[1024];//filesize no large than 10K
 };
 
-static int * HEAD; //HEAD of current process
+static long * HEAD; //HEAD of current process
 static int * TAIL; //TAIL of current process
-static int TAILS[120] = {}; //Tails of other fuzzers
+static long TAILS[120] = {}; //Tails of other fuzzers
 static int ID;
 static int TOTAL;
 static void * NeighborLog[120] = {};

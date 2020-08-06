@@ -28,7 +28,7 @@ int CreateLog(int id, int total) {
 
     myshmid = shmid;
     void * smem = shmat(shmid, NULL, 0);
-    HEAD = (int *)smem;
+    HEAD = (long *)smem;
     ID = id;
     TOTAL = total;
     if(TOTAL>120) {
@@ -178,7 +178,11 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
 
 void PrintLogStats(){
     Printf("stat::pushed_logs:              %zd\n", NumberOfPushedLogs);
+    Printf("stat::HEAD:                     %zd\n", *HEAD);
     Printf("stat::poped_logs:               %zd\n", NumberOfPopedLogs);
+    for(int i=0; i<TOTAL; i++) {
+    Printf("stat::poped_logs from %d:       %zd\n", i, TAILS[i]);
+    }
 }
 
 //Flush out all the stale test cases from the instance id by force
