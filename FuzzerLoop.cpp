@@ -432,9 +432,12 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
 
   if(Options.Shm) {
      InputInfo * II;
-     bool tmpb = Options.SaveHash;
-     Options.SaveHash = !tmpb;
-     while((II = PopInputInfo()) != NULL) {
+     //bool tmpb = Options.SaveHash;
+     //Options.SaveHash = !tmpb;
+     Vector<InputInfo *> VII;
+     PopInputInfo(VII);
+     //while((II = PopInputInfo()) != NULL) {
+     for(auto &II : VII) {
        if(II->U.size() > MaxSize) II->U.resize(MaxSize);
        if(!Corpus.HasUnit(II->U)){
           II->HasFocusFunction = false;
@@ -457,7 +460,7 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
        if(II->KeyRing > 0) PushInputInfo(II);
        //delete II; // not AddToCorpus
      }
-     Options.SaveHash = tmpb;
+     //Options.SaveHash = tmpb;
   } else {
       Vector<Unit> AdditionalCorpus;
       if(Options.Group > 0)
@@ -471,8 +474,8 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
       if (Options.Verbosity >= 2)
         Printf("Reload: read %zd new units.\n", AdditionalCorpus.size());
 
-      bool tmpb = Options.SaveHash;
-      Options.SaveHash = !tmpb;
+      //bool tmpb = Options.SaveHash;
+      //Options.SaveHash = !tmpb;
       for (auto &U : AdditionalCorpus) {
 	if (BadCorpusHashes.count(Hash(U))) continue;
         if (U.size() > MaxSize)
@@ -488,7 +491,7 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
           }
         }
       }
-      Options.SaveHash = tmpb;
+      //Options.SaveHash = tmpb;
   }
   auto ThisSyncTimeInNanoSeconds = duration_cast<nanoseconds>(system_clock::now() - ThisSyncTime).count();
   //auto ThisSyncTimeInNanoSeconds = duration_cast<milliseconds>(system_clock::now() - ThisSyncTime).count();

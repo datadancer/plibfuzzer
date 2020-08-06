@@ -710,8 +710,8 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
 
   Options.Shm = Flags.shm;
   if (Options.Shm) {
-      CreateLog(Flags.id);
-      AttachLog((Flags.id+1) % Flags.total);
+      CreateLog(Flags.id, Flags.total);
+      AttachLog();
   }
   if (Flags.exit_on_src_pos)
     Options.ExitOnSrcPos = Flags.exit_on_src_pos;
