@@ -463,6 +463,8 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
 	      delete II;
 	    }
           }
+       } else {
+	 delete II;
        }
        //II->KeyRing -= 1;
        //if(II->KeyRing > 0) PushInputInfo(II);
