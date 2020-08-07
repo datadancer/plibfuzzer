@@ -447,22 +447,26 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
                */
               if(Options.id == 0 || (II->Sha1[0] % Options.Group == Options.id % Options.Group)) {
        	        //Corpus.AddToCorpus(II); //Add to corpus immediatially
-          	if(RunOne(II->U.data(), II->U.size())){//Execute RunOne to add to corpus
+          	if(ReRunOne(II->U.data(), II->U.size())){//Execute RunOne to add to corpus
 	          IncreaseNumberOfIntrestingPopedLogs();
                   Reloaded = true;
+		} else {
+		  delete II;
 		}
               } 
           } else {
        	    //Corpus.AddToCorpus(II); //Add to corpus immidiatlly
-            if(RunOne(II->U.data(), II->U.size())){ //Execute RunOne to add to corpus
+            if(ReRunOne(II->U.data(), II->U.size())){ //Execute RunOne to add to corpus
 	      IncreaseNumberOfIntrestingPopedLogs();
               Reloaded = true;
+	    } else {
+	      delete II;
 	    }
           }
        }
        //II->KeyRing -= 1;
        //if(II->KeyRing > 0) PushInputInfo(II);
-       delete II; // not AddToCorpus
+       //delete II; // not AddToCorpus
      }
      //Options.SaveHash = tmpb;
   } else {
@@ -533,6 +537,36 @@ static void RenameFeatureSetFile(const std::string &FeaturesDir,
   if (FeaturesDir.empty()) return;
   RenameFile(DirPlusFile(FeaturesDir, OldFile),
              DirPlusFile(FeaturesDir, NewFile));
+}
+
+bool Fuzzer::ReRunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,
+                    InputInfo *II, bool *FoundUniqFeatures) {
+  if (!Size)
+    return false;
+
+  if (Options.SaveHash){
+    Sha1Hash TmpSha1;
+    ComputeSHA1(CurrentUnitData, Size, TmpSha1);
+    Sha1Vector.push_back(Sha1ToString(TmpSha1));
+  }
+
+  UniqFeatureSetTmp.clear();
+  size_t NumUpdatesBefore = Corpus.NumFeatureUpdates();
+  
+  for(auto &Feature : II->UniqFeatureSet) {
+    if (Corpus.AddFeature(Feature, Size, Options.Shrink))
+      UniqFeatureSetTmp.push_back(Feature);
+  }
+  
+  size_t NumNewFeatures = Corpus.NumFeatureUpdates() - NumUpdatesBefore;
+  if (NumNewFeatures) {
+    Corpus.AddToCorpus(II);
+    WriteFeatureSetToFile(Options.FeaturesDir, Sha1ToString(II->Sha1),
+                          II->UniqFeatureSet);
+    return true;
+  }
+
+  return false;
 }
 
 bool Fuzzer::RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile,

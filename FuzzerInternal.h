@@ -66,6 +66,8 @@ public:
   static void StaticGracefulExitCallback();
 
   void ExecuteCallback(const uint8_t *Data, size_t Size);
+  bool ReRunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile = false,
+              InputInfo *II = nullptr, bool *FoundUniqFeatures = nullptr);
   bool RunOne(const uint8_t *Data, size_t Size, bool MayDeleteFile = false,
               InputInfo *II = nullptr, bool *FoundUniqFeatures = nullptr);
 
