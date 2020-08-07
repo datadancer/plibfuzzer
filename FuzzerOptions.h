@@ -22,6 +22,7 @@ struct FuzzingOptions {
   bool Shm = false;
   bool SaveHash = false;
   bool Repeat = false;
+  bool RunOne = false;
   bool SmartMutate = false;
   int Verbosity = 1;
   size_t MaxLen = 0;

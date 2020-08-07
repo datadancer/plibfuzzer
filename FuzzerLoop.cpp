@@ -456,19 +456,24 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
               } 
           } else {
        	    //Corpus.AddToCorpus(II); //Add to corpus immidiatlly
-            if(ReRunOne(II->U.data(), II->U.size(), false, II, NULL)){ //Execute RunOne to add to corpus
-	      IncreaseNumberOfIntrestingPopedLogs();
-              Reloaded = true;
+	    if(Options.RunOne){
+                if(RunOne(II->U.data(), II->U.size())){ //Execute RunOne to add to corpus
+	          IncreaseNumberOfIntrestingPopedLogs();
+                  Reloaded = true;
+	        } 
+	        delete II;
 	    } else {
-	      delete II;
+                if(ReRunOne(II->U.data(), II->U.size(), false, II, NULL)){ //Execute RunOne to add to corpus
+	          IncreaseNumberOfIntrestingPopedLogs();
+                  Reloaded = true;
+	        } else {
+	          delete II;
+	        }
 	    }
           }
        } else {
 	 delete II;
        }
-       //II->KeyRing -= 1;
-       //if(II->KeyRing > 0) PushInputInfo(II);
-       //delete II; // not AddToCorpus
      }
      //Options.SaveHash = tmpb;
   } else {
