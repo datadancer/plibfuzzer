@@ -176,7 +176,7 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     	LogStart = (char *)CurrentNeighborLog + sizeof(HEAD);
     	logs = (struct InputInfoLog *)LogStart;
     	for(long j=TAILS[i]; j < *head; j++){
-		Printf("Popping %d/%d from %d\n", j, *head, i); 
+		//Printf("Popping %d/%d from %d\n", j, *head, i); 
 		IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
     		NumberOfPopedLogs++;
     	}
