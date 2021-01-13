@@ -26,6 +26,7 @@
 #include <queue>
 #include <sstream>
 #include <thread>
+#include <sys/time.h>
 
 namespace fuzzer {
 
@@ -341,10 +342,18 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs));
   }
 
+  size_t MergedJobs = 0;
+  size_t TotalJobs = NumJobs;
+
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
-    if (!Job)
-      break;
+    if (!Job) {
+      if(MergedJobs >= TotalJobs) break; 
+      StopJobs(); 
+      sleep(1);
+      continue;
+    }
+
     ExitCode = Job->ExitCode;
     if (ExitCode == Options.InterruptExitCode) {
       Printf("==%lu== libFuzzer: a child was interrupted; exiting\n", GetPid());
@@ -354,6 +363,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     Fuzzer::MaybeExitGracefully();
 
     Env.RunOneMergeJob(Job.get());
+    MergedJobs++;
 
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
@@ -397,7 +407,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     }
 
     //FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs)); //Lu JobId is too big for Shm
-    FuzzQ.Push(Env.CreateNewJob(Job->JobId, NumJobs)); //Lu Use current Job->JobId
+    //FuzzQ.Push(Env.CreateNewJob(Job->JobId, NumJobs)); //Lu Use current Job->JobId
+    //TotalJobs++;
   }
 
   for (auto &T : Threads)
