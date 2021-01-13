@@ -350,7 +350,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     if (!Job) {
       if(MergedJobs >= TotalJobs) break; 
       StopJobs(); 
-      sleep(1);
+      SleepSeconds(1);
       continue;
     }
 
