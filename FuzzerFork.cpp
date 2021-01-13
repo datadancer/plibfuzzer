@@ -114,18 +114,24 @@ struct GlobalEnv {
         .count();
   }
 
-  FuzzJob *CreateNewJob(size_t JobId) {
+  FuzzJob *CreateNewJob(size_t JobId, size_t Total) {
     Command Cmd(Args);
     Cmd.removeFlag("fork");
     Cmd.removeFlag("runs");
     Cmd.removeFlag("collect_data_flow");
     for (auto &C : CorpusDirs) // Remove all corpora from the args.
       Cmd.removeArgument(C);
-    Cmd.addFlag("reload", "0");  // working in an isolated dir, no reload.
+    //Cmd.addFlag("reload", "0");  // working in an isolated dir, no reload.
     Cmd.addFlag("print_final_stats", "1");
     Cmd.addFlag("print_funcs", "0");  // no need to spend time symbolizing.
     Cmd.addFlag("max_total_time", std::to_string(std::min((size_t)300, JobId)));
     Cmd.addFlag("stop_file", StopFile());
+    // For in memory share
+    if(JobId <= Total) {
+	Cmd.addFlag("shm", "1");
+    	Cmd.addFlag("id", std::to_string(JobId-1)); //JobId is from 1 to Total
+    	Cmd.addFlag("total", std::to_string(Total));
+    }
     if (!DataFlowBinary.empty()) {
       Cmd.addFlag("data_flow_trace", DFTDir);
       if (!Cmd.hasFlag("focus_function"))
@@ -332,7 +338,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   Vector<std::thread> Threads;
   for (int t = 0; t < NumJobs; t++) {
     Threads.push_back(std::thread(WorkerThread, &FuzzQ, &MergeQ));
-    FuzzQ.Push(Env.CreateNewJob(JobId++));
+    FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs));
   }
 
   while (true) {
@@ -390,7 +396,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
       break;
     }
 
-    FuzzQ.Push(Env.CreateNewJob(JobId++));
+    //FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs)); //Lu JobId is too big for Shm
+    FuzzQ.Push(Env.CreateNewJob(Job->JobId, NumJobs)); //Lu Use current Job->JobId
   }
 
   for (auto &T : Threads)
