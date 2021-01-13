@@ -349,8 +349,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
       if(MergedJobs >= TotalJobs) break; 
-      StopJobs(); 
       SleepSeconds(1);
+      StopJobs(); 
       continue;
     }
 
@@ -362,6 +362,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     }
     Fuzzer::MaybeExitGracefully();
 
+    Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
     Env.RunOneMergeJob(Job.get());
     MergedJobs++;
 
