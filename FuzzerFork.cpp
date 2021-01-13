@@ -391,19 +391,19 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     // Stop if we are over the time budget.
     // This is not precise, since other threads are still running
     // and we will wait while joining them.
-    // We also don't stop instantly: other jobs need to finish.
+    // We also don't stop instantly: other jobs need to finish and merge.
     if (Options.MaxTotalTimeSec > 0 &&
         Env.secondsSinceProcessStartUp() >= (size_t)Options.MaxTotalTimeSec) {
       Printf("INFO: fuzzed for %zd seconds, wrapping up soon\n",
              Env.secondsSinceProcessStartUp());
       StopJobs();
-      break;
+      //break;
     }
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
       Printf("INFO: fuzzed for %zd iterations, wrapping up soon\n",
              Env.NumRuns);
       StopJobs();
-      break;
+      //break;
     }
 
     //FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs)); //Lu JobId is too big for Shm
