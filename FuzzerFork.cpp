@@ -124,7 +124,7 @@ struct GlobalEnv {
     //Cmd.addFlag("reload", "0");  // working in an isolated dir, no reload.
     Cmd.addFlag("print_final_stats", "1");
     Cmd.addFlag("print_funcs", "0");  // no need to spend time symbolizing.
-    Cmd.addFlag("max_total_time", std::to_string(std::min((size_t)300, JobId)));
+    //Cmd.addFlag("max_total_time", std::to_string(std::min((size_t)300, JobId)));
     Cmd.addFlag("stop_file", StopFile());
     // For in memory share
     if(JobId <= Total) {
