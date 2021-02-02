@@ -365,7 +365,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     Fuzzer::MaybeExitGracefully();
 
     Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
-    if(Job->JobId == 0) {
+    if(Job->JobId == 1) {
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
     }
