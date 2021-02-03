@@ -91,6 +91,7 @@ struct GlobalEnv {
   Vector<std::string> CorpusDirs;
   std::string MainCorpusDir;
   std::string TempDir;
+  std::string TempCorpus;
   std::string DFTDir;
   std::string DataFlowBinary;
   Set<uint32_t> Features, Cov;
@@ -140,11 +141,12 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize =
-            std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
+    if (size_t CorpusSubsetSize = (Files.size()/Total){
+           // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
       auto Time1 = std::chrono::system_clock::now();
-      for (size_t i = 0; i < CorpusSubsetSize; i++) {
-        auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
+      for (size_t i = (JobId-1)*CorpusSubsetSize; i < JobId*CorpusSubsetSize; i++) {
+        //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
+	auto &SF = Files[i];
         Seeds += (Seeds.empty() ? "" : ",") + SF;
         CollectDFT(SF);
       }
@@ -413,7 +415,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     }
 
     //FuzzQ.Push(Env.CreateNewJob(JobId++, NumJobs)); //Lu JobId is too big for Shm
-    FuzzQ.Push(Env.CreateNewJob(Job->JobId, NumJobs)); //Lu Use current Job->JobId
+    //FuzzQ.Push(Env.CreateNewJob(Job->JobId, NumJobs)); //Lu Use current Job->JobId
     //TotalJobs++;
   }
 
