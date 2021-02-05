@@ -373,6 +373,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     MergedJobs++;
 
     Env.RunOneMergeJob(Job.get());
+    Printf("INFO: try merge one job .\n");
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
       Env.NumTimeouts++;

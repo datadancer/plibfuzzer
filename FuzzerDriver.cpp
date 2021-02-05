@@ -19,6 +19,7 @@
 #include "FuzzerRandom.h"
 #include "FuzzerTracePC.h"
 #include "FuzzerShare.h"
+#include "FuzzerVersion.h"
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -622,6 +623,7 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
   const Vector<std::string> Args(*argv, *argv + *argc);
   assert(!Args.empty());
   ProgName = new std::string(Args[0]);
+  Printf("libfuzzer build version %s\n", LIBFUZZER_VERSION);
   if (Argv0 != *ProgName) {
     Printf("ERROR: argv[0] has been modified in LLVMFuzzerInitialize\n");
     exit(1);
