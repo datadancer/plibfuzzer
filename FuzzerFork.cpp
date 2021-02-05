@@ -350,11 +350,10 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
-	break;
-     // if(MergedJobs >= TotalJobs) break; 
-     // SleepSeconds(1);
-      //StopJobs(); 
-     // continue;
+	if(MergedJobs >= TotalJobs) break; 
+        SleepSeconds(1);
+        StopJobs(); 
+        continue;
     }
 
     ExitCode = Job->ExitCode;
@@ -425,7 +424,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 
   // The workers have terminated. Don't try to remove the directory before they
   // terminate to avoid a race condition preventing cleanup on Windows.
-  //RmDirRecursive(Env.TempDir);
+  RmDirRecursive(Env.TempDir);
 
   // Use the exit code from the last child process.
   Printf("INFO: exiting: %d time: %zds\n", ExitCode,
