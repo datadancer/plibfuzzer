@@ -366,13 +366,13 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     Fuzzer::MaybeExitGracefully();
 
     Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
-    if(Job->JobId == 1) {
+    /*if(Job->JobId == 1) {
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
-    }
-    //MergedJobs++;
+    }*/
+    MergedJobs++;
 
-    //Env.RunOneMergeJob(Job.get());
+    Env.RunOneMergeJob(Job.get());
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
       Env.NumTimeouts++;
