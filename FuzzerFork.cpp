@@ -350,7 +350,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
-	if(MergedJobs >= TotalJobs) break; 
+	if(MergedJobs >= TotalJobs-1) break; 
         SleepSeconds(1);
         StopJobs(); 
         continue;
@@ -407,7 +407,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
              Env.secondsSinceProcessStartUp());
       printf("gtt exit with the time out\n");
       StopJobs();
-      break;
+      //break;
+      continue;
     }
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
       Printf("INFO: fuzzed for %zd iterations, wrapping up soon\n",
