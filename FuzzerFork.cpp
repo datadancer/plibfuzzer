@@ -371,7 +371,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     }*/
     //MergedJobs++;
 
-    //Env.RunOneMergeJob(Job.get());
+    Env.RunOneMergeJob(Job.get());
     Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
@@ -405,7 +405,6 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
       Printf("INFO: fuzzed for %zd seconds, wrapping up soon\n",
              Env.secondsSinceProcessStartUp());
       //printf("gtt exit with the time out\n");
-      Env.RunOneMergeJob(Job.get());
       StopJobs();
       break;
     }
