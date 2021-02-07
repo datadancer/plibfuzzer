@@ -141,10 +141,10 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize = (Files.size()/Total)){
+    if (size_t CorpusSubsetSize = Files.size()){
            // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
       auto Time1 = std::chrono::system_clock::now();
-      for (size_t i = (JobId-1)*CorpusSubsetSize; i < JobId*CorpusSubsetSize; i++) {
+      for (size_t i = 0; i < CorpusSubsetSize; i++) {
         //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
 	auto &SF = Files[i];
         Seeds += (Seeds.empty() ? "" : ",") + SF;
@@ -369,7 +369,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
     }*/
-    MergedJobs++;
+    //MergedJobs++;
 
     //Env.RunOneMergeJob(Job.get());
     Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
@@ -404,7 +404,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
         Env.secondsSinceProcessStartUp() >= (size_t)Options.MaxTotalTimeSec) {
       Printf("INFO: fuzzed for %zd seconds, wrapping up soon\n",
              Env.secondsSinceProcessStartUp());
-      printf("gtt exit with the time out\n");
+      //printf("gtt exit with the time out\n");
       Env.RunOneMergeJob(Job.get());
       StopJobs();
       break;
@@ -412,7 +412,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
       Printf("INFO: fuzzed for %zd iterations, wrapping up soon\n",
              Env.NumRuns);
-      printf("gtt exit at the numruns");
+      //printf("gtt exit at the numruns");
       StopJobs();
       break;
     }
