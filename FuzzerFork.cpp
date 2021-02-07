@@ -141,10 +141,10 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize = Files.size()){
+    if (size_t CorpusSubsetSize = (Files.size()/Total)){
            // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
       auto Time1 = std::chrono::system_clock::now();
-      for (size_t i = 0; i < CorpusSubsetSize; i++) {
+      for (size_t i = (CorpusSubsetSize*(JobId-1)); i < CorpusSubsetSize*JobId; i++) {
         //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
 	auto &SF = Files[i];
         Seeds += (Seeds.empty() ? "" : ",") + SF;
@@ -350,7 +350,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
-	if(MergedJobs >= TotalJobs-1) break; 
+	if(MergedJobs >= TotalJobs) break; 
         SleepSeconds(1);
         StopJobs(); 
         continue;
