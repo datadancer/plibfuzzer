@@ -359,6 +359,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     ExitCode = Job->ExitCode;
     if (ExitCode == Options.InterruptExitCode) {
       Printf("==%lu== libFuzzer: a child was interrupted; exiting\n", GetPid());
+      printf("gtt exit at the crtl + c");
       StopJobs();
       break;
     }
@@ -369,7 +370,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
     }*/
-    //MergedJobs++;
+    MergedJobs++;
 
     Env.RunOneMergeJob(Job.get());
     Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
@@ -404,7 +405,7 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
         Env.secondsSinceProcessStartUp() >= (size_t)Options.MaxTotalTimeSec) {
       Printf("INFO: fuzzed for %zd seconds, wrapping up soon\n",
              Env.secondsSinceProcessStartUp());
-      //printf("gtt exit with the time out\n");
+      printf("gtt exit with the time out\n");
       StopJobs();
       break;
     }
