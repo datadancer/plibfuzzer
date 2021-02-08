@@ -350,6 +350,11 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
+	for(int i=0;i<TotalJobs;i++){
+	    Env.RunOneMergeJob(Job.get());
+	    Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
+            MergedJobs++;
+	}
 	if(MergedJobs >= TotalJobs) break; 
         SleepSeconds(1);
         StopJobs(); 
@@ -365,15 +370,15 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
     }
     Fuzzer::MaybeExitGracefully();
 
-    Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
+    //Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
     /*if(Job->JobId == 1) {
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
     }*/
-    MergedJobs++;
+    //MergedJobs++;
 
-    Env.RunOneMergeJob(Job.get());
-    Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
+    //Env.RunOneMergeJob(Job.get());
+    //Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
       Env.NumTimeouts++;
@@ -405,10 +410,9 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
         Env.secondsSinceProcessStartUp() >= (size_t)Options.MaxTotalTimeSec) {
       Printf("INFO: fuzzed for %zd seconds, wrapping up soon\n",
              Env.secondsSinceProcessStartUp());
-      printf("gtt exit with the time out\n");
+      //printf("gtt exit with the time out\n");
       StopJobs();
       //break;
-      continue;
     }
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
       Printf("INFO: fuzzed for %zd iterations, wrapping up soon\n",
