@@ -350,11 +350,6 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
   while (true) {
     std::unique_ptr<FuzzJob> Job(MergeQ.Pop());
     if (!Job) {
-	for(int i=0;i<TotalJobs;i++){
-	    Env.RunOneMergeJob(Job.get());
-	    Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
-            MergedJobs++;
-	}
 	if(MergedJobs >= TotalJobs) break; 
         SleepSeconds(1);
         StopJobs(); 
@@ -375,9 +370,10 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 	Printf("INFO: try merge job\n");
 	Env.RunOneMergeJob(Job.get());
     }*/
-    //MergedJobs++;
+    MergedJobs++;
 
-    //Env.RunOneMergeJob(Job.get());
+    Env.RunOneMergeJob(Job.get());
+    Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
     //Printf("INFO: env.RunOneMergeJob(Job.get()) .\n");
     // Continue if our crash is one of the ignorred ones.
     if (Options.IgnoreTimeouts && ExitCode == Options.TimeoutExitCode)
