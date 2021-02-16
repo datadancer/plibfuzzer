@@ -428,7 +428,9 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 
   // The workers have terminated. Don't try to remove the directory before they
   // terminate to avoid a race condition preventing cleanup on Windows.
-  RmDirRecursive(Env.TempDir);
+  //RmDirRecursive(Env.TempDir);
+  Printf("do not remove tempdirs.");
+
 
   // Use the exit code from the last child process.
   Printf("INFO: exiting: %d time: %zds\n", ExitCode,
