@@ -185,21 +185,22 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
 	}
 	TAILS[i] = * head; //Update current tail
     }*/
-     int i =ID+1;
-     if (ID==TOTAL-1)i=0;
-     void * CurrentNeighborLog = NeighborLog[i];
-     if(CurrentNeighborLog == NULL)  {
-	 Printf("Error: Neighbor Log is null, skip popping.\n");
-     }
-     head = (long *)CurrentNeighborLog;
-     LogStart = (char *)CurrentNeighborLog + sizeof(HEAD);
-     logs = (struct InputInfoLog *)LogStart;
-     for(long j=TAILS[i]; j < *head; j++){
-	 //Printf("Popping %d/%d from %d\n", j, *head, i);
-	 IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
-	 NumberOfPopedLogs++;
-     }
-     TAILS[i] = * head; //Update current tail
+    int i =ID+1;
+    if (ID==TOTAL-1)
+	i=0;
+    void * CurrentNeighborLog = NeighborLog[i];
+    if(CurrentNeighborLog == NULL)  {
+	Printf("Error: Neighbor Log is null, skip popping.\n");
+    }
+    head = (long *)CurrentNeighborLog;
+    LogStart = (char *)CurrentNeighborLog + sizeof(HEAD);
+    logs = (struct InputInfoLog *)LogStart;
+    for(long j=TAILS[i]; j < *head; j++){
+       	//Printf("Popping %d/%d from %d\n", j, *head, i);
+	IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
+	NumberOfPopedLogs++;
+    }
+    TAILS[i] = * head; //Update current tail
 }
 
 void IncreaseNumberOfIntrestingPopedLogs(){
