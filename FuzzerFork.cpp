@@ -371,10 +371,9 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 	Env.RunOneMergeJob(Job.get());
     }*/
     MergedJobs++;
-    printf("current mergedjobs is %d .", MergedJobs);
     if (MergedJobs == 1){
 	printf("sleep 100s.\n");
-	SleepSeconds(60);
+	SleepSeconds(100);
     }
 
     Env.RunOneMergeJob(Job.get());
@@ -433,8 +432,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 
   // The workers have terminated. Don't try to remove the directory before they
   // terminate to avoid a race condition preventing cleanup on Windows.
-  //RmDirRecursive(Env.TempDir);
-  Printf("do not remove tempdirs.");
+  RmDirRecursive(Env.TempDir);
+  //Printf("do not remove tempdirs.");
 
 
   // Use the exit code from the last child process.
