@@ -408,6 +408,8 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
              Env.secondsSinceProcessStartUp());
       //printf("gtt exit with the time out\n");
       StopJobs();
+      printf("gtt print .log files in 100s.");
+      SleepSeconds(100);
       //break;
     }
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
