@@ -141,10 +141,10 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize = (Files.size()/Total)){
+    if (size_t CorpusSubsetSize = (Files.size())){
            // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
       auto Time1 = std::chrono::system_clock::now();
-      for (size_t i = (JobId-1)*CorpusSubsetSize; i < CorpusSubsetSize*JobId ; i++) {
+      for (size_t i = (1-1)*CorpusSubsetSize; i < CorpusSubsetSize*1 ; i++) {
         //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
 	auto &SF = Files[i];
         Seeds += (Seeds.empty() ? "" : ",") + SF;
