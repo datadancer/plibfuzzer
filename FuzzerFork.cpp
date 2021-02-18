@@ -371,6 +371,11 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
 	Env.RunOneMergeJob(Job.get());
     }*/
     MergedJobs++;
+    printf("current mergedjobs is %d .", MergedJobs);
+    if (MergedJobs == 1){
+	printf("sleep 100s.\n");
+	SleepSeconds(60);
+    }
 
     Env.RunOneMergeJob(Job.get());
     Printf("INFO: try merge job %d, %d/%d merged.\n", Job->JobId, MergedJobs, TotalJobs);
@@ -408,8 +413,6 @@ void FuzzWithFork(Random &Rand, const FuzzingOptions &Options,
              Env.secondsSinceProcessStartUp());
       //printf("gtt exit with the time out\n");
       StopJobs();
-      printf("gtt print .log files in 100s.");
-      SleepSeconds(100);
       //break;
     }
     if (Env.NumRuns >= Options.MaxNumberOfRuns) {
