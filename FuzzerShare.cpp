@@ -165,7 +165,7 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
     void * LogStart;
     struct InputInfoLog * logs; 
 
-    /*for(int i=0; i<TOTAL; i++){
+    for(int i=0; i<TOTAL; i++){
 	if (i == ID) continue;
     //int i =ID+1;
 	//if (ID==TOTAL-1)
@@ -184,8 +184,9 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
 		NumberOfPopedLogs++;
 	}
 	TAILS[i] = * head; //Update current tail
-    }*/
-    int i =ID+1;
+    }
+    
+    /*int i =ID+1;
     if (ID==TOTAL-1)
 	i=0;
     void * CurrentNeighborLog = NeighborLog[i];
@@ -200,7 +201,7 @@ void PopInputInfo(Vector<InputInfo*> &IIV) {
 	IIV.push_back(PopOneInputInfo(logs + (j % NUM_LOGS)));
 	NumberOfPopedLogs++;
     }
-    TAILS[i] = * head; //Update current tail
+    TAILS[i] = * head; //Update current tail*/
 }
 
 void IncreaseNumberOfIntrestingPopedLogs(){
