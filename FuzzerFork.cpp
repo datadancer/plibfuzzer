@@ -141,14 +141,26 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize = (Files.size())){
+    if (size_t CorpusSubsetSize = (int) ceil(Files.size()/Total)){
            // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
       auto Time1 = std::chrono::system_clock::now();
-      for (size_t i = (1-1)*CorpusSubsetSize; i < CorpusSubsetSize*1 ; i++) {
+      size_t n=1;
+      for (size_t i = (JobId-1)*CorpusSubsetSize; i < CorpusSubsetSize*JobId ; i++) {
         //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
-	auto &SF = Files[i];
-        Seeds += (Seeds.empty() ? "" : ",") + SF;
-        CollectDFT(SF);
+        if(i<=Files.size()){
+                auto &SF = Files[i];
+                Seeds += (Seeds.empty() ? "" : ",") + SF;
+                CollectDFT(SF);
+        }
+        else
+        {
+                for(size_t i = (n-1)*CorpusSubsetSize; i < CorpusSubsetSize*n ; i++){
+                        auto &SF = Files[i];
+                        Seeds += (Seeds.empty() ? "" : ",") + SF;
+                        CollectDFT(SF);
+                        n++;
+                }
+        }
       }
       auto Time2 = std::chrono::system_clock::now();
       Job->DftTimeInSeconds = duration_cast<seconds>(Time2 - Time1).count();
