@@ -141,27 +141,39 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (size_t CorpusSubsetSize = (int) ceil(Files.size()/Total)){
-           // std::min(Files.size(), (size_t)sqrt(Files.size() + 2))) {
-      auto Time1 = std::chrono::system_clock::now();
-      size_t n=1;
-      for (size_t i = (JobId-1)*CorpusSubsetSize; i < CorpusSubsetSize*JobId ; i++) {
-        //auto &SF = Files[Rand->SkewTowardsLast(Files.size())];
-        if(i<=Files.size()){
-                auto &SF = Files[i];
-                Seeds += (Seeds.empty() ? "" : ",") + SF;
-                CollectDFT(SF);
-        }
-        else
-        {
-                for(size_t i = (n-1)*CorpusSubsetSize; i < CorpusSubsetSize*n ; i++){
-                        auto &SF = Files[i];
-                        Seeds += (Seeds.empty() ? "" : ",") + SF;
-                        CollectDFT(SF);
-                        n++;
-                }
-        }
-      }
+    if (Files.size()){
+    size_t CorpusSubsetSize = Files.size()/Total ;
+    CorpusSubsetSize += 1;
+    if(CorpusSubsetSize % 2 == 1) CorpusSubsetSize += 1;
+    size_t a = CorpusSubsetSize / 2 ;
+    auto Time1 = std::chrono::system_clock::now();
+    size_t Max = Files.size();
+    for (size_t i = (JobId-1) * a ; i < a * JobId ; i++) {
+              if (0 <= i && i < Max ) {
+                            auto &SF = Files[i];
+                            Seeds += (Seeds.empty() ? "" : ",") + SF;
+                            CollectDFT(SF);
+                        }
+              else{
+                           size_t j = Files.size()/2;
+                           auto &SF = Files[j];
+                           Seeds += (Seeds.empty() ? "" : ",") + SF;
+                           CollectDFT(SF);
+                        }
+    }
+    for (size_t i = ((int)(Files.size()) - (JobId-1) * a - 1)  ; i >= ((int)(Files.size()) - (JobId)*a) ; i--) {
+              if (0 <= i && i < Max) {
+                            auto &SF = Files[i];
+                            Seeds += (Seeds.empty() ? "" : ",") + SF;
+                            CollectDFT(SF);
+                        }
+              else{
+                           size_t j = Files.size()/2 ;
+                           auto &SF = Files[j];
+                           Seeds += (Seeds.empty() ? "" : ",") + SF;
+                           CollectDFT(SF);
+                        }
+    }
       auto Time2 = std::chrono::system_clock::now();
       Job->DftTimeInSeconds = duration_cast<seconds>(Time2 - Time1).count();
     }
