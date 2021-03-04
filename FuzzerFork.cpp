@@ -141,7 +141,7 @@ struct GlobalEnv {
     }
     auto Job = new FuzzJob;
     std::string Seeds;
-    if (Files.size()){
+    /*if (Files.size()){
     size_t CorpusSubsetSize = Files.size()/Total ;
     CorpusSubsetSize += 1;
     if(CorpusSubsetSize % 2 == 1) CorpusSubsetSize += 1;
@@ -176,6 +176,28 @@ struct GlobalEnv {
     }
       auto Time2 = std::chrono::system_clock::now();
       Job->DftTimeInSeconds = duration_cast<seconds>(Time2 - Time1).count();
+    }*/
+    if (Files.size()){
+            size_t CorpusSubsetSize = (int) (Files.size()/Total);
+            auto Time1 = std::chrono::system_clock::now();
+            CorpusSubsetSize += 1;
+            size_t Max = Files.size();
+            if ((Files.size() % Total) == 0) CorpusSubsetSize -= 1;
+            for (size_t i = (JobId-1)*CorpusSubsetSize; i < CorpusSubsetSize*JobId ; i++) {
+                    if ( i < Max) {
+                            auto &SF = Files[i];
+                            Seeds += (Seeds.empty() ? "" : ",") + SF;
+                            CollectDFT(SF);
+                        }
+                   else{
+                           size_t j = Rand->SkewTowardsLast(Files.size());
+                           auto &SF = Files[j];
+                           Seeds += (Seeds.empty() ? "" : ",") + SF;
+                           CollectDFT(SF);
+                        }
+            }
+            auto Time2 = std::chrono::system_clock::now();
+            Job->DftTimeInSeconds = duration_cast<seconds>(Time2 - Time1).count();
     }
     if (!Seeds.empty()) {
       Job->SeedListPath =
